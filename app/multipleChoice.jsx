@@ -8,7 +8,7 @@ import OptionsCards from '../components/multipleChoise/OptionsCards';
 
 export default function MultipleChoice() {
     const navigation = useNavigation();
-    const { groupID,option, gameCategory, ...element } = useLocalSearchParams();
+    const { groupKichwa,groupID,option, gameCategory, ...element } = useLocalSearchParams();
 
     console.log('----------------------------------------------------')
     console.log('grupo ID: ', groupID )
@@ -37,6 +37,7 @@ export default function MultipleChoice() {
                 //filteredElements={parsedFilteredElements}
                 option={option}
                 groupID={groupID}
+                groupKichwa={groupKichwa}
                 />
         </View>
     )

@@ -4,7 +4,7 @@ import { useRouter } from 'expo-router';
 import { ColorsPalet } from './../constants/Colors';
 import Ionicons from '@expo/vector-icons/Ionicons';
 
-export default function ElementCard({ element, option, category, nameSymbolLearnedElements, symbolNameLearnedElements, groupID}) {
+export default function ElementCard({ element, option, category, nameSymbolLearnedElements, symbolNameLearnedElements, groupID, grupoKichwa}) {
     const router = useRouter();
     const [isLearned, setIsLearned] = useState(false);
     console.log(element)
@@ -32,7 +32,8 @@ export default function ElementCard({ element, option, category, nameSymbolLearn
                     //symbolNameLearnedElements: serializedSymbolNameLearnedElements,
                     //filteredElements: serializedFilteredElements,
                     option:option,
-                    groupID: groupID
+                    groupID: groupID,
+                    grupoKichwa: grupoKichwa
                 },
             });
         } else {
@@ -45,7 +46,8 @@ export default function ElementCard({ element, option, category, nameSymbolLearn
                     //symbolNameLearnedElements: serializedSymbolNameLearnedElements,
                     //filteredElements: serializedFilteredElements,
                     option:option,
-                    groupID: groupID
+                    groupID: groupID,
+                    grupoKichwa: grupoKichwa
                 },
             });
         }

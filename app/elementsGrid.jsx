@@ -77,6 +77,7 @@ export default function ElementsGrid() {
                         symbolNameLearnedElements={symbolNameLearnedElements}
                         filteredElements={filteredElements}
                         groupID={groupID}
+                        grupoKichwa={grupoKichwa}
                     />
                 )}
                 numColumns={numColumns}

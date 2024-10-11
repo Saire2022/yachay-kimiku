@@ -3,25 +3,25 @@ import React, { useState, useEffect } from 'react';
 import { TouchableOpacity } from 'react-native';
 import { ColorsPalet } from '../../constants/Colors';
 import { collection, query, where, getDocs, updateDoc, doc, arrayUnion, getDoc } from 'firebase/firestore';
-import { db, auth } from './../../config/FireBaseConfig'; 
+import { db, auth } from './../../config/FireBaseConfig';
 import { playAudio } from '../../scripts/playAudio';
 import { router } from 'expo-router';
 import getLearnedElements from '../../scripts/getLearnedElements';
 import CompletionScreen from '../CompletionScreen';
 
-export default function OptionsCards({ element, category, option, groupID}) {
-  const [optionsList, setOptionsList] = useState([]); 
+export default function OptionsCards({ element, category, option, groupID, groupKichwa }) {
+  const [optionsList, setOptionsList] = useState([]);
   const [loading, setLoading] = useState(true); // Estado de carga
   const [feedback, setFeedback] = useState('')
   const [showModal, setShowModal] = useState(false); // Estado para mostrar el modal de feedback
   const [respuesta_correcta, setRespuestaCorrecta] = useState(false)
   const [filteredElements, setFilteredElements] = useState([]);
-  const [userData, setUserData] =useState(null);
+  const [userData, setUserData] = useState(null);
   const [showCompletion, setShowCompletion] = useState(false);
 
   useEffect(() => {
     loadOptions();
-    getLearnedElements(db,auth,setFilteredElements, setUserData, groupID)
+    getLearnedElements(db, auth, setFilteredElements, setUserData, groupID)
   }, []);
 
   // Función para barajar el array usando Fisher-Yates
@@ -66,7 +66,7 @@ export default function OptionsCards({ element, category, option, groupID}) {
 
   const handreAnswer = async (selectedButton) => {
     if (selectedButton === element.symbol) {
-  console.log('Grupo id desde optionCard', groupID)
+      console.log('Grupo id desde optionCard', groupID)
       // Respuesta correcta
       setFeedback(true);
       setShowModal(true);
@@ -122,42 +122,42 @@ export default function OptionsCards({ element, category, option, groupID}) {
 
     // Encuentra el siguiente elemento no aprendido
     const nextElement = filteredElements.slice(currentIndex + 1).find(el => {
-        if (category === 'Nombre - Símbolo') {
-            return !nameSymbolLearnedElements.includes(el.id);
-        } else if (category === 'Símbolo - Nombre') {
-            return !symbolNameLearnedElements.includes(el.id);
-        }
-        return false;
+      if (category === 'Nombre - Símbolo') {
+        return !nameSymbolLearnedElements.includes(el.id);
+      } else if (category === 'Símbolo - Nombre') {
+        return !symbolNameLearnedElements.includes(el.id);
+      }
+      return false;
     });
 
-    
+
 
     // Si hay un siguiente elemento, redirige a la vista correspondiente
     if (nextElement) {
-        if (option === 'Insertar nombre') {
-            router.replace({
-                pathname: '/insertName',
-                params: { ...nextElement, gameCategory: category },
-                option: option,
-                groupID: groupID
-            });
-        } else {
-            router.replace({
-                pathname: '/multipleChoice',
-                params: { 
-                  ...nextElement, 
-                  gameCategory: category,
-                  option: option,
-                  groupID: groupID
-                 },
-            });
-        }
+      if (option === 'Insertar nombre') {
+        router.replace({
+          pathname: '/insertName',
+          params: { ...nextElement, gameCategory: category },
+          option: option,
+          groupID: groupID
+        });
+      } else {
+        router.replace({
+          pathname: '/multipleChoice',
+          params: {
+            ...nextElement,
+            gameCategory: category,
+            option: option,
+            groupID: groupID
+          },
+        });
+      }
     } else {
-        // Si no hay más elementos, muestra un mensaje de finalización o redirige a otra pantalla
-        console.log('¡Felicidades! Has completado todos los elementos.');
-        setShowCompletion(true);
+      // Si no hay más elementos, muestra un mensaje de finalización o redirige a otra pantalla
+      console.log('¡Felicidades! Has completado todos los elementos.');
+      setShowCompletion(true);
     }
-}
+  }
 
   if (loading) {
     return (
@@ -167,6 +167,14 @@ export default function OptionsCards({ element, category, option, groupID}) {
     );
   }
 
+  if (showCompletion) {
+    return (
+      <View style={styles.completionContainer}>
+        {/* Completion Screen */}
+        {showCompletion && <CompletionScreen category={category} groupID={groupID} gameOption={option} groupKichwa={groupKichwa}/>}
+      </View>
+    );
+  }
   return (
     <View>
       <FlatList
@@ -183,7 +191,7 @@ export default function OptionsCards({ element, category, option, groupID}) {
               </TouchableOpacity>
             ) : (
               <TouchableOpacity style={styles.containerPlane}
-              onPress={() => handreAnswer(item.symbol)}>
+                onPress={() => handreAnswer(item.symbol)}>
                 <Text style={styles.nameText}>{item.kichwa}</Text>
               </TouchableOpacity>
             )}
@@ -206,20 +214,18 @@ export default function OptionsCards({ element, category, option, groupID}) {
 
           {respuesta_correcta ? (
             <TouchableOpacity onPress={handleSiguiente} style={respuesta_correcta ? styles.continueButton_Correct : styles.continueButton_Incorrect}>
-            <Text style={styles.continueText}>Siguiente</Text>
-          </TouchableOpacity>)
-          :
-          (
-            <TouchableOpacity onPress={handleContinue} style={respuesta_correcta ? styles.continueButton_Correct : styles.continueButton_Incorrect}>
-            <Text style={styles.continueText}>Continuar</Text>
-          </TouchableOpacity>
-          )
+              <Text style={styles.continueText}>Siguiente</Text>
+            </TouchableOpacity>)
+            :
+            (
+              <TouchableOpacity onPress={handleContinue} style={respuesta_correcta ? styles.continueButton_Correct : styles.continueButton_Incorrect}>
+                <Text style={styles.continueText}>Continuar</Text>
+              </TouchableOpacity>
+            )
           }
 
         </View>
       </Modal>
-      {/* Completion Screen */}
-      {showCompletion && <CompletionScreen categoria={category}/>}
     </View>
   );
 }
@@ -308,4 +314,12 @@ const styles = StyleSheet.create({
     color: '#fff',
     fontSize: 20
   },
+  completionContainer: {
+    alignSelf: 'center',
+    alignItems: 'center',
+    width: '100%',
+    height: '100%',
+    marginTop: -210
+    //backgroundColor:ColorsPalet.primary
+  }
 });
