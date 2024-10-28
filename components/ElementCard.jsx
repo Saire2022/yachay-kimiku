@@ -4,34 +4,33 @@ import { useRouter } from 'expo-router';
 import { ColorsPalet } from './../constants/Colors';
 import Ionicons from '@expo/vector-icons/Ionicons';
 
-export default function ElementCard({ element, option, category, nameSymbolLearnedElements, symbolNameLearnedElements, groupID, grupoKichwa}) {
+export default function ElementCard({ element, option, category, nameSymbolLearnedElements, symbolNameLearnedElements, groupID, grupoKichwa }) {
     const router = useRouter();
     const [isLearned, setIsLearned] = useState(false);
-    console.log(element)
+    //console.log(element)
 
-    // Actualizar estado 'isLearned' basado en las listas de elementos aprendidos
-     useEffect(() => {
+    useEffect(() => {
         if (category === 'Nombre - Símbolo' && nameSymbolLearnedElements.includes(element.id)) {
             setIsLearned(true);
         } else if (category === 'Símbolo - Nombre' && symbolNameLearnedElements.includes(element.id)) {
             setIsLearned(true);
         } else {
-            setIsLearned(false); 
+            setIsLearned(false);
         }
     }, [option, nameSymbolLearnedElements, symbolNameLearnedElements, element.id]);
- 
+
     const handlePress = () => {
         const selectedCategory = category;
         if (option === 'Insertar nombre') {
             router.push({
                 pathname: '/insertName',
-                params: { 
-                    ...element, 
+                params: {
+                    ...element,
                     gameCategory: selectedCategory,
                     //nameSymbolLearnedElements: serializedNameSymbolLearnedElements,
                     //symbolNameLearnedElements: serializedSymbolNameLearnedElements,
                     //filteredElements: serializedFilteredElements,
-                    option:option,
+                    option: option,
                     groupID: groupID,
                     grupoKichwa: grupoKichwa
                 },
@@ -39,21 +38,21 @@ export default function ElementCard({ element, option, category, nameSymbolLearn
         } else {
             router.push({
                 pathname: '/multipleChoice',
-                params: { 
-                    ...element, 
+                params: {
+                    ...element,
                     gameCategory: selectedCategory,
                     //nameSymbolLearnedElements: serializedNameSymbolLearnedElements,
                     //symbolNameLearnedElements: serializedSymbolNameLearnedElements,
                     //filteredElements: serializedFilteredElements,
-                    option:option,
+                    option: option,
                     groupID: groupID,
                     grupoKichwa: grupoKichwa
                 },
             });
         }
     };
-    
-    
+
+
 
     return (
         <TouchableOpacity

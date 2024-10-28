@@ -38,7 +38,7 @@ export default function SignIn() {
       .catch((error) => {
         const errorCode = error.code;
         const errorMessage = error.message;
-        if (errorCode === 'auth/invalid-credential') {
+        if (errorCode === 'auth/invalid-credential' || errorCode === 'auth/invalid-email') {
           setError('Por favor, verifica tus credenciales y vuelve a intentarlo.');
         };
         if (error.code === 'auth/network-request-failed') {

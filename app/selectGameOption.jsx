@@ -29,7 +29,7 @@ export default function SelectGameOption() {
                 gameOption: option }, // Pasar el parámetro correctamente
         });
     };
-    console.log('Grupo:', groupID)
+    //console.log('Grupo:', groupID)
 
     return (
         <View style={{ padding: 20 }}>

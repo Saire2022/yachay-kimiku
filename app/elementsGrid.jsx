@@ -14,9 +14,11 @@ export default function ElementsGrid() {
     const [loading, setLoading] = useState(true);
     const user = auth.currentUser;
 
+    //console.log('Game option: ', gameOption)
+
     useEffect(() => {
         navigation.setOptions({
-            headerTitle: grupoKichwa, 
+            headerTitle: grupoKichwa,
         });
         if (user) {
             fetchData();
@@ -29,7 +31,7 @@ export default function ElementsGrid() {
             console.error('Valor de groupID vacío!');
             return;
         }
-        setLoading(true); 
+        setLoading(true);
         try {
             // Obtener datos del usuario y elementos en paralelo
             const [userDoc, elementsSnapshot] = await Promise.all([
@@ -57,9 +59,11 @@ export default function ElementsGrid() {
     }
 
     const numColumns = 3;
-    
-    const nameSymbolLearnedElements = userData?.gameStats?.[groupID]?.nameSymbol?.learnedElements || [];
-    const symbolNameLearnedElements = userData?.gameStats?.[groupID]?.symbolName?.learnedElements || [];
+    const option = gameOption === 'Selección múltiple' ? 'multipleChoice' : '';
+    const nameSymbolLearnedElements = userData?.gameStats?.[groupID]?.[option]?.nameSymbol?.learnedElements || [];
+    const symbolNameLearnedElements = userData?.gameStats?.[groupID]?.[option]?.symbolName?.learnedElements || [];
+
+    console.log(nameSymbolLearnedElements, symbolNameLearnedElements);
 
     return (
         <View style={{ padding: 20 }}>

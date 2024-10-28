@@ -9,9 +9,9 @@ import { router } from 'expo-router';
 import getLearnedElements from '../../scripts/getLearnedElements';
 import CompletionScreen from '../CompletionScreen';
 
-export default function OptionsCards({ element, category, option, groupID, groupKichwa }) {
+export default function OptionsCards({ element, category, option, groupID, grupoKichwa }) {
   const [optionsList, setOptionsList] = useState([]);
-  const [loading, setLoading] = useState(true); // Estado de carga
+  const [loading, setLoading] = useState(true);
   const [feedback, setFeedback] = useState('')
   const [showModal, setShowModal] = useState(false); // Estado para mostrar el modal de feedback
   const [respuesta_correcta, setRespuestaCorrecta] = useState(false)
@@ -24,7 +24,8 @@ export default function OptionsCards({ element, category, option, groupID, group
     getLearnedElements(db, auth, setFilteredElements, setUserData, groupID)
   }, []);
 
-  // Función para barajar el array usando Fisher-Yates
+  const gameOption = option === 'Selección múltiple' ? 'multipleChoice' : '';
+
   const shuffleArray = (array) => {
     for (let i = array.length - 1; i > 0; i--) {
       const j = Math.floor(Math.random() * (i + 1));
@@ -66,7 +67,6 @@ export default function OptionsCards({ element, category, option, groupID, group
 
   const handreAnswer = async (selectedButton) => {
     if (selectedButton === element.symbol) {
-      console.log('Grupo id desde optionCard', groupID)
       // Respuesta correcta
       setFeedback(true);
       setShowModal(true);
@@ -80,20 +80,22 @@ export default function OptionsCards({ element, category, option, groupID, group
       // Verificar si el elemento ya está en learnedElements
       let learnedElements = [];
       if (category === 'Nombre - Símbolo') {
-        learnedElements = userSnapshot.data()?.gameStats?.groupID?.nameSymbol?.learnedElements || [];
+        learnedElements = userSnapshot.data()?.gameStats?.groupID?.option?.nameSymbol?.learnedElements || [];
       } else {
-        learnedElements = userSnapshot.data()?.gameStats?.groupID?.symbolName?.learnedElements || [];
+        learnedElements = userSnapshot.data()?.gameStats?.groupID?.option?.symbolName?.learnedElements || [];
       }
 
       if (!learnedElements.includes(element.id)) {
         // Solo agregar el ID si no está en learnedElements
         if (category === 'Nombre - Símbolo') {
           await updateDoc(userRef, {
-            [`gameStats.${groupID}.nameSymbol.learnedElements`]: arrayUnion(element.id),
+            [`gameStats.${groupID}.multipleChoice.nameSymbol.learnedElements`]: arrayUnion(element.id),
+            [`gameStats.${groupID}.multipleChoice.nameSymbol.completedCategory`]: true,
           });
         } else {
           await updateDoc(userRef, {
-            [`gameStats.${groupID}.symbolName.learnedElements`]: arrayUnion(element.id),
+            [`gameStats.${groupID}.multipleChoice.symbolName.learnedElements`]: arrayUnion(element.id),
+            [`gameStats.${groupID}.multipleChoice.symbolName.completedCategory`]: true,
           });
         }
       }
@@ -107,20 +109,25 @@ export default function OptionsCards({ element, category, option, groupID, group
     }
   };
 
-
   const handleContinue = () => {
     setShowModal(false);
     console.log('Continuar')
   }
 
-  const handleSiguiente = () => {
+  const handleSiguiente = async () => {
     setShowModal(false);
-    const nameSymbolLearnedElements = userData?.gameStats?.[groupID]?.nameSymbol?.learnedElements || [];
-    const symbolNameLearnedElements = userData?.gameStats?.[groupID]?.symbolName?.learnedElements || [];
 
+
+    // Retrieve learned elements for both categories
+    const nameSymbolLearnedElements = [userData?.gameStats?.[groupID]?.[gameOption]?.nameSymbol?.learnedElements] || [];
+    const symbolNameLearnedElements = userData?.gameStats?.[groupID]?.[gameOption]?.symbolName?.learnedElements || [];
+
+    //console.log('Hooo',gameOption, symbolNameLearnedElements);
+
+    // Find the current index of the element
     const currentIndex = filteredElements.findIndex(el => el.id === element.id);
 
-    // Encuentra el siguiente elemento no aprendido
+    // Find the next unlearned element based on category
     const nextElement = filteredElements.slice(currentIndex + 1).find(el => {
       if (category === 'Nombre - Símbolo') {
         return !nameSymbolLearnedElements.includes(el.id);
@@ -130,34 +137,44 @@ export default function OptionsCards({ element, category, option, groupID, group
       return false;
     });
 
-
-
-    // Si hay un siguiente elemento, redirige a la vista correspondiente
+    // Navigate to the next element or handle completion if all elements are learned
     if (nextElement) {
-      if (option === 'Insertar nombre') {
-        router.replace({
-          pathname: '/insertName',
-          params: { ...nextElement, gameCategory: category },
+      const path = option === 'Insertar nombre' ? '/insertName' : '/multipleChoice';
+      router.replace({
+        pathname: path,
+        params: {
+          ...nextElement,
+          gameCategory: category,
+          groupID: groupID,
           option: option,
-          groupID: groupID
-        });
-      } else {
-        router.replace({
-          pathname: '/multipleChoice',
-          params: {
-            ...nextElement,
-            gameCategory: category,
-            option: option,
-            groupID: groupID
-          },
+          grupoKichwa: grupoKichwa
+        },
+      });
+    } else {
+      // No more elements to learn
+      console.log('¡Felicidades! Has completado todos los elementos.');
+
+      // Reference to the user's document
+      const userRef = doc(db, 'users', auth.currentUser.uid);
+      const userSnapshot = await getDoc(userRef);
+      const user = userSnapshot.data();
+
+      // Check completion status for both categories
+      const completedNameSymbol = user?.gameStats?.[groupID]?.[gameOption]?.nameSymbol?.completedCategory;
+      const completedSymbolName = user?.gameStats?.[groupID]?.[gameOption]?.symbolName?.completedCategory;
+
+      if (completedNameSymbol && completedSymbolName) {
+        // Update game state in the database
+        await updateDoc(userRef, {
+          [`gameStats.${groupID}.multipleChoice.completedGameOption`]: true,
         });
       }
-    } else {
-      // Si no hay más elementos, muestra un mensaje de finalización o redirige a otra pantalla
-      console.log('¡Felicidades! Has completado todos los elementos.');
+
+      // Show the completion modal
       setShowCompletion(true);
     }
-  }
+  };
+
 
   if (loading) {
     return (
@@ -171,10 +188,14 @@ export default function OptionsCards({ element, category, option, groupID, group
     return (
       <View style={styles.completionContainer}>
         {/* Completion Screen */}
-        {showCompletion && <CompletionScreen category={category} groupID={groupID} gameOption={option} groupKichwa={groupKichwa}/>}
+        {showCompletion &&
+          <CompletionScreen category={category} groupID={groupID}
+            gameOption={option} grupoKichwa={grupoKichwa}
+            completedElementCategory={true} />}
       </View>
     );
   }
+
   return (
     <View>
       <FlatList
@@ -320,6 +341,5 @@ const styles = StyleSheet.create({
     width: '100%',
     height: '100%',
     marginTop: -210
-    //backgroundColor:ColorsPalet.primary
   }
 });

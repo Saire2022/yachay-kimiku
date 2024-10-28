@@ -8,14 +8,15 @@ import OptionsCards from '../components/multipleChoise/OptionsCards';
 
 export default function MultipleChoice() {
     const navigation = useNavigation();
-    const { groupKichwa,groupID,option, gameCategory, ...element } = useLocalSearchParams();
+    const { grupoKichwa,groupID,option, gameCategory, ...element } = useLocalSearchParams();
 
     console.log('----------------------------------------------------')
+    console.log('Element:', element);
     console.log('grupo ID: ', groupID )
+    console.log('grupo Kichwa: ', grupoKichwa )
+    console.log('option: ', option )
+    console.log('gameCategory: ', gameCategory )
 
-/*     console.log('-----------------------------------------');
-    console.log(parsedNameSymbolLearnedElements, parsedSymbolNameLearnedElements, parsedFilteredElements);
- */
     useEffect(() => {
         navigation.setOptions({
             headerTitle: gameCategory, // Establecer el título vacío
@@ -37,8 +38,8 @@ export default function MultipleChoice() {
                 //filteredElements={parsedFilteredElements}
                 option={option}
                 groupID={groupID}
-                groupKichwa={groupKichwa}
-                />
+                grupoKichwa={grupoKichwa}
+            />
         </View>
     )
 }
