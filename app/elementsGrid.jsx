@@ -14,8 +14,6 @@ export default function ElementsGrid() {
     const [loading, setLoading] = useState(true);
     const user = auth.currentUser;
 
-    //console.log('Game option: ', gameOption)
-
     useEffect(() => {
         navigation.setOptions({
             headerTitle: grupoKichwa,
@@ -41,6 +39,7 @@ export default function ElementsGrid() {
 
             if (userDoc.exists()) {
                 setUserData(userDoc.data());
+                console.log('Datos del usuario:', userDoc.data());
             } else {
                 console.log('No se encontraron datos para el usuario.');
             }
@@ -59,7 +58,8 @@ export default function ElementsGrid() {
     }
 
     const numColumns = 3;
-    const option = gameOption === 'Selección múltiple' ? 'multipleChoice' : '';
+    const option = gameOption === 'Selección múltiple' ? 'multipleChoice' : 'insertName';
+    
     const nameSymbolLearnedElements = userData?.gameStats?.[groupID]?.[option]?.nameSymbol?.learnedElements || [];
     const symbolNameLearnedElements = userData?.gameStats?.[groupID]?.[option]?.symbolName?.learnedElements || [];
 

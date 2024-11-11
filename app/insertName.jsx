@@ -9,8 +9,9 @@ import { ColorsPalet } from '../constants/Colors';
 
 export default function InsertName() {
     const item = useLocalSearchParams();
-
     const navigation = useNavigation();
+
+    console.log(item)
 
     useEffect(() => {
         navigation.setOptions({
@@ -23,18 +24,9 @@ export default function InsertName() {
         {/* Header: BarProgress and Hit */}
         <Header />
         {/* Element Card */}
-        <ElementCard element={item}/>
+        <ElementCard element={item} category={item.gameCategory}/>
         {/* InputText */}
-        <TextArea />
-        {/* Buttons */}
-        <View style={styles.container}>
-            <View style={styles.button}>
-                <Text>Atras</Text>
-            </View>
-            <View style={styles.button}>
-                <Text>Siguiente</Text>
-            </View>
-        </View>
+        <TextArea element={item} category={item.gameCategory} groupID={item.groupID} gameOption={item.option} grupoKichwa={item.grupoKichwa}/>
     </View>
   )
 }
@@ -65,5 +57,6 @@ const styles = StyleSheet.create({
             justifyContent: 'center', // Alineación vertical del texto
             alignItems:'center',
 
-    }
+    },
+    
 })

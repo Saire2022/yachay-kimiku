@@ -18,6 +18,7 @@ export default function OptionsCards({ element, category, option, groupID, grupo
   const [filteredElements, setFilteredElements] = useState([]);
   const [userData, setUserData] = useState(null);
   const [showCompletion, setShowCompletion] = useState(false);
+  const [completedGameCategory, setCompletedGameCategory] = useState(false)
 
   useEffect(() => {
     loadOptions();
@@ -86,7 +87,6 @@ export default function OptionsCards({ element, category, option, groupID, grupo
       }
 
       if (!learnedElements.includes(element.id)) {
-        // Solo agregar el ID si no está en learnedElements
         if (category === 'Nombre - Símbolo') {
           await updateDoc(userRef, {
             [`gameStats.${groupID}.multipleChoice.nameSymbol.learnedElements`]: arrayUnion(element.id),
@@ -121,8 +121,6 @@ export default function OptionsCards({ element, category, option, groupID, grupo
     // Retrieve learned elements for both categories
     const nameSymbolLearnedElements = [userData?.gameStats?.[groupID]?.[gameOption]?.nameSymbol?.learnedElements] || [];
     const symbolNameLearnedElements = userData?.gameStats?.[groupID]?.[gameOption]?.symbolName?.learnedElements || [];
-
-    //console.log('Hooo',gameOption, symbolNameLearnedElements);
 
     // Find the current index of the element
     const currentIndex = filteredElements.findIndex(el => el.id === element.id);
@@ -164,6 +162,7 @@ export default function OptionsCards({ element, category, option, groupID, grupo
       const completedSymbolName = user?.gameStats?.[groupID]?.[gameOption]?.symbolName?.completedCategory;
 
       if (completedNameSymbol && completedSymbolName) {
+        setCompletedGameCategory(true)
         // Update game state in the database
         await updateDoc(userRef, {
           [`gameStats.${groupID}.multipleChoice.completedGameOption`]: true,
@@ -191,7 +190,7 @@ export default function OptionsCards({ element, category, option, groupID, grupo
         {showCompletion &&
           <CompletionScreen category={category} groupID={groupID}
             gameOption={option} grupoKichwa={grupoKichwa}
-            completedElementCategory={true} />}
+            completedGameCategory={completedGameCategory} />}
       </View>
     );
   }

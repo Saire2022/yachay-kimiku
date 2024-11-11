@@ -10,11 +10,6 @@ export default function MultipleChoice() {
     const navigation = useNavigation();
     const { grupoKichwa,groupID,option, gameCategory, ...element } = useLocalSearchParams();
 
-    console.log('----------------------------------------------------')
-    console.log('Element:', element);
-    console.log('grupo ID: ', groupID )
-    console.log('grupo Kichwa: ', grupoKichwa )
-    console.log('option: ', option )
     console.log('gameCategory: ', gameCategory )
 
     useEffect(() => {
@@ -33,9 +28,6 @@ export default function MultipleChoice() {
             <OptionsCards 
                 element={element}
                 category={gameCategory} 
-                //nameSymbolLearnedElements={parsedNameSymbolLearnedElements}
-                //symbolNameLearnedElements={parsedSymbolNameLearnedElements}
-                //filteredElements={parsedFilteredElements}
                 option={option}
                 groupID={groupID}
                 grupoKichwa={grupoKichwa}

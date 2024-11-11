@@ -7,7 +7,7 @@ import Ionicons from '@expo/vector-icons/Ionicons';
 export default function ElementCard({ element, option, category, nameSymbolLearnedElements, symbolNameLearnedElements, groupID, grupoKichwa }) {
     const router = useRouter();
     const [isLearned, setIsLearned] = useState(false);
-    //console.log(element)
+    //console.log('Grupokichuwa', grupoKichwa)
 
     useEffect(() => {
         if (category === 'Nombre - Símbolo' && nameSymbolLearnedElements.includes(element.id)) {

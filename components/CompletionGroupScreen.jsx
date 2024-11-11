@@ -7,8 +7,9 @@ import { router } from 'expo-router';
 import { doc, getDoc } from 'firebase/firestore';
 import { auth, db } from '../config/FireBaseConfig';
 
-const CompletionScreen = ({ category, groupID, gameOption, grupoKichwa, completedGameCategory }) => {
+const CompletionScreen = ({grupoKichwa}) => {
   const navigation = useNavigation();
+  console.log(grupoKichwa)
 
   return (
     <View style={styles.container}>
@@ -20,22 +21,21 @@ const CompletionScreen = ({ category, groupID, gameOption, grupoKichwa, complete
       >
         🧪
       </Animatable.Text>
-      {completedGameCategory ?
-        <>
+
           {/* Mensaje de felicitación */}
           <Animatable.Text
             animation="fadeIn"
             delay={500}
             style={styles.congratulationsText}
           >
-            ¡Felicidades! Has completado el juego {gameOption}!
+            ¡FELICIDADES! Has terminado de aprender el grupo {grupoKichwa}!
           </Animatable.Text>
           <Animatable.Text
             animation="fadeIn"
             delay={1000}
             style={styles.subText}
           >
-            ¡Sigue al siguiente tipo de juego!
+            ¡Sigue aprendiendo un nuevo grupo!
           </Animatable.Text>
 
           <Animatable.View
@@ -45,61 +45,11 @@ const CompletionScreen = ({ category, groupID, gameOption, grupoKichwa, complete
           >
             <TouchableOpacity
               style={styles.button}
-              onPress={() => router.push({
-                pathname: './selectGameOption',
-                params: {
-                  groupID: groupID,
-                  grupoKichwa: grupoKichwa,
-                  gameOption: gameOption
-                },
-              })}
+              onPress={() => router.push('./(tabs)')}
             >
-              <Text style={styles.buttonText}>Seleccionar juego</Text>
+              <Text style={styles.buttonText}>Seleccionar grupo</Text>
             </TouchableOpacity>
           </Animatable.View>
-        </>
-
-        :
-        <>
-
-          {/* Mensaje de felicitación */}
-          <Animatable.Text
-            animation="fadeIn"
-            delay={500}
-            style={styles.congratulationsText}
-          >
-            ¡Felicidades! Has completado la categoría {category}!
-          </Animatable.Text>
-          <Animatable.Text
-            animation="fadeIn"
-            delay={1000}
-            style={styles.subText}
-          >
-            ¡Avanza a la siguiente categoría!
-          </Animatable.Text>
-
-          {/* Botón para continuar */}
-          <Animatable.View
-            animation="bounceInUp"
-            delay={1500}
-            style={styles.buttonWrapper}
-          >
-            <TouchableOpacity
-              style={styles.button}
-              onPress={() => router.push({
-                pathname: 'selectGameCategory',
-                params: {
-                  groupID: groupID,
-                  gameOption: gameOption,
-                  grupoKichwa: grupoKichwa
-                }
-              })}
-            >
-              <Text style={styles.buttonText}>Seleccionar otra categoría</Text>
-            </TouchableOpacity>
-          </Animatable.View>
-        </>
-      }
 
     </View >
   );
