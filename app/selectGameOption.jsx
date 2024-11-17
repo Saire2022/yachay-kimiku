@@ -26,10 +26,9 @@ export default function SelectGameOption() {
             params: {
                 groupID: groupID,
                 grupoKichwa: grupoKichwa, 
-                gameOption: option }, // Pasar el parámetro correctamente
+                gameOption: option }, 
         });
     };
-    //console.log('Grupo:', groupID)
 
     return (
         <View style={{ padding: 20 }}>

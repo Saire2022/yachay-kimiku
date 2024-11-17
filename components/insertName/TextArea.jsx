@@ -19,6 +19,7 @@ export default function TextArea({ element, category, groupID, gameOption, grupo
     const [showCompletion, setShowCompletion] = useState(false);
     const [completedGameCategory, setCompletedGameCategory] = useState(false)
     const [completedGameOption, setCompletedGameOption] = useState(false)
+    const [showCompletionGroup, setShowCompletionGroup] = useState(false);
 
     const router = useRouter();
 
@@ -87,14 +88,7 @@ export default function TextArea({ element, category, groupID, gameOption, grupo
         const nameSymbolLearnedElements = user?.gameStats?.[groupID]?.insertName?.nameSymbol?.learnedElements || [];
         const symbolNameLearnedElements = user?.gameStats?.[groupID]?.insertName?.symbolName?.learnedElements || [];
 
-        console.log('filteredElements:', filteredElements);
         const currentIndex = filteredElements.findIndex(el => el.id === element.id);
-        console.log('currentIndex:', currentIndex);
-
-        if (currentIndex === -1) {
-            console.error("Current element not found in filteredElements");
-            return;
-        }
 
         // Attempt to find nextElement based on learned elements
         let nextElement = filteredElements.slice(currentIndex + 1).find(el => {
@@ -113,6 +107,7 @@ export default function TextArea({ element, category, groupID, gameOption, grupo
 
         console.log('nextElement:', nextElement);
         if (nextElement) {
+            // Navigate to the next element
             router.replace({
                 pathname: '/insertName',
                 params: {
@@ -129,32 +124,73 @@ export default function TextArea({ element, category, groupID, gameOption, grupo
             const userRef = doc(db, 'users', auth.currentUser.uid);
             const userSnapshot = await getDoc(userRef);
             const user = userSnapshot.data();
+
             const completedNameSymbol = user?.gameStats?.[groupID]?.[option]?.nameSymbol?.completedCategory;
             const completedSymbolName = user?.gameStats?.[groupID]?.[option]?.symbolName?.completedCategory;
-            if (completedNameSymbol || completedSymbolName) {
-                // Show the completion modal
-                setShowCompletion(true);
-            }
-            if (completedNameSymbol && completedSymbolName) {
-                setCompletedGameCategory(true)
-                await updateDoc(doc(db, 'users', auth.currentUser.uid), {
-                    [`gameStats.${groupID}.insertName.completedGameOption`]: true,
-                });
-            }
 
-            const completedInsertName = user?.gameStats?.[groupID]?.[option]?.completedGameOption;
-            const completedMultipleChoice = user?.gameStats?.[groupID]?.[option]?.completedGameOption;
-            if (completedInsertName && completedMultipleChoice) {
-                setCompletedGameOption(true)
-                setShowCompletion(false)
-                await updateDoc(doc(db, 'users', auth.currentUser.uid), {
-                    [`gameStats.${groupID}.completedElementCategory`]: true,
-                    [`unlockedGroups`]: arrayUnion(''),
-                });
+            // Show the completion modal if any category is completed
+            if (completedNameSymbol || completedSymbolName) {
+                setShowCompletion(true);
+                if (completedNameSymbol && completedSymbolName) {
+                    setShowCompletion(false);
+                    setCompletedGameOption(true);
+                    const currentStars = user?.totalStars || 0;
+                    const starsEarned = calculateStars();
+                    const newStarTotal = currentStars + starsEarned;
+
+                    await updateDoc(userRef, {
+                        [`gameStats.${groupID}.insertName.completedGameOption`]: true,
+                        [`totalStars`]: newStarTotal,
+                        [`gameStats.${groupID}.completedElementCategory`]: true,
+                    });
+
+                    // Threshold for unlocking the next group
+                    const unlockThreshold = {
+                        'G1': 15,
+                        'G2': 30,
+                        'G3': 45,
+                        'G4': 60,
+                        'G5': 75,
+                        'G6': 90,
+                        'G7': 105,
+                        'G8': 120,
+                        'G9': 135,
+                        'G10': 150
+                    };
+
+                    //Add elements to learnedElements
+                    const learnedElements = user?.learnedElements || [];
+                    const filteredElementIds = filteredElements.map(element => element.id);
+                    const newLearnedElements = [...learnedElements, ...filteredElementIds]; await updateDoc(userRef, {
+                        learnedElements: newLearnedElements
+                    });
+
+                    // Check if the user has enough stars to unlock the next group
+                    if (newStarTotal >= unlockThreshold[groupID]) {
+                        const nextGroupID = getNextGroupID(groupID);
+                        await updateDoc(userRef, {
+                            [`unlockedGroups`]: arrayUnion(nextGroupID),
+                        });
+                        console.log(`Congratulations! You have unlocked ${nextGroupID}.`);
+                    }
+                }
             }
             setShowModal(true);
         }
     };
+
+    // Helper function to calculate stars based on user performance
+    function calculateStars() {
+        return 15;
+    }
+
+    // Helper function to get the next group ID in the order
+    function getNextGroupID(currentGroupID) {
+        const groupOrder = ['G1', 'G2', 'G3', 'G4', 'G5', 'G6', 'G7', 'G8', 'G9', 'G10'];
+        const currentIndex = groupOrder.indexOf(currentGroupID);
+        return groupOrder[currentIndex + 1];
+    }
+
 
     if (showCompletion) {
         return (

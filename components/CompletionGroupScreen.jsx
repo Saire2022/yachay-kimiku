@@ -4,8 +4,7 @@ import * as Animatable from 'react-native-animatable';
 import { useNavigation } from '@react-navigation/native';
 import { ColorsPalet } from '../constants/Colors';
 import { router } from 'expo-router';
-import { doc, getDoc } from 'firebase/firestore';
-import { auth, db } from '../config/FireBaseConfig';
+
 
 const CompletionScreen = ({grupoKichwa}) => {
   const navigation = useNavigation();

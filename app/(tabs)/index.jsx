@@ -14,7 +14,7 @@ export default function HomeScreen() {
 
     const learnedItems = userData?.learnedElements ? userData.learnedElements.length : 0;
     const stars = userData?.totalStars || 0;
-    const userName= userData?.username || '';
+    const userName= userData?.userName || '';
     const unlockedGroups = userData?.unlockedGroups || [];
 
     useEffect(() => {
@@ -30,15 +30,24 @@ export default function HomeScreen() {
             const querySnapshot = await getDocs(collection(db, 'elementGroups'));
             const groupList = [];
             querySnapshot.forEach((doc) => {
-                groupList.push({ id: doc.id, ...doc.data() }); // Agregar los datos de cada documento
+                groupList.push({ id: doc.id, ...doc.data() });
             });
-            setGroups(groupList); // Actualiza el estado con las categorías
+    
+            // Ordena la lista basada en el valor numérico después de la letra "G"
+            groupList.sort((a, b) => {
+                const numA = parseInt(a.id.replace('G', ''), 10);
+                const numB = parseInt(b.id.replace('G', ''), 10);
+                return numA - numB;
+            });
+    
+            setGroups(groupList); // Actualiza el estado con los grupos ordenados
         } catch (error) {
-            console.error('Error al obtener las categorías:', error);
+            console.error('Error al obtener los grupos:', error);
         } finally {
             setLoading(false); 
         }
     };
+    
 
     const fetchUserData = async () => {
         try {

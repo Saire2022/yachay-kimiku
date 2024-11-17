@@ -44,7 +44,7 @@ export default function CategoryCard({ elememtsGroup, kichwa, spanish, unlockSta
                     flexDirection: 'row',
                     alignItems: 'center',
                 }}>
-                    <Text style={styles.learnedTextRigth}> <Text style={styles.learnedTextLeft}>2</Text>/ {elementsByCat}</Text>
+{/*                     <Text style={styles.learnedTextRigth}> <Text style={styles.learnedTextLeft}>2</Text>/ {elementsByCat}</Text>*/}
                 </View>
                 <View style={{
                     display: 'flex',
@@ -58,51 +58,51 @@ export default function CategoryCard({ elememtsGroup, kichwa, spanish, unlockSta
         </TouchableOpacity>
     );
 }
-
 const styles = StyleSheet.create({
     categoryCard: {
         padding: 10,
         marginBottom: 10,
-        backgroundColor: '#f9f9f9',
+        backgroundColor: ColorsPalet.backgroundLight, // Softer light blue background
         borderRadius: 8,
-        shadowColor: '#000',
+        shadowColor: ColorsPalet.gray, // Subtle gray shadow
         shadowOffset: {
             width: 0,
             height: 2,
         },
         shadowOpacity: 0.2,
         shadowRadius: 2,
-        elevation: 1, // Para Android
+        elevation: 1, // For Android
         display: 'flex',
         flexDirection: 'column',
         borderWidth: 1,
-        borderColor: ColorsPalet.secondary,
+        borderColor: ColorsPalet.secondary, // Vibrant secondary tone for the border
     },
-    disabledCard: { // Estilo para el botón deshabilitado
-        backgroundColor: '#e0e0e0', // Color de fondo deshabilitado
-        borderColor: '#b0b0b0', // Color de borde deshabilitado
+    disabledCard: { 
+        backgroundColor: ColorsPalet.gray, 
+        borderColor: ColorsPalet.gray, 
     },
     categoryName: {
         fontSize: 18,
         fontWeight: 'bold',
+        color: ColorsPalet.primary, 
     },
     categoryStars: {
         fontSize: 25,
-        color: ColorsPalet.primary,
+        color: ColorsPalet.accent, 
         fontWeight: 'bold',
     },
     spanishText: {
         fontSize: 15,
-        color: '#ccc',
+        color: ColorsPalet.secondary, 
     },
     learnedTextLeft: {
         fontSize: 25,
         fontWeight: 'bold',
-        color: ColorsPalet.primary,
+        color: ColorsPalet.primary, 
     },
     learnedTextRigth: {
         fontSize: 15,
         fontWeight: 'bold',
-        color: ColorsPalet.primary,
+        color: ColorsPalet.secondary,
     },
 });
