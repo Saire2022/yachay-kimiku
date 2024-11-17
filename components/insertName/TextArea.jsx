@@ -19,7 +19,6 @@ export default function TextArea({ element, category, groupID, gameOption, grupo
     const [showCompletion, setShowCompletion] = useState(false);
     const [completedGameCategory, setCompletedGameCategory] = useState(false)
     const [completedGameOption, setCompletedGameOption] = useState(false)
-    const [showCompletionGroup, setShowCompletionGroup] = useState(false);
 
     const router = useRouter();
 
