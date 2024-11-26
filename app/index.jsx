@@ -11,8 +11,8 @@ export default function Index() {
   };
 
   const handleButton=()=>{
-    router.navigate(
-      './signIn'
+    router.push(
+      'signIn'
     )
   }
   return (

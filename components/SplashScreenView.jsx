@@ -4,7 +4,7 @@ import React from 'react'
 export default function SplashScreenView() {
     return (
         <View style={styles.container}>
-            <Text>Loading Page ...</Text>
+            <Text>Loading ...</Text>
         </View>
     )
 }

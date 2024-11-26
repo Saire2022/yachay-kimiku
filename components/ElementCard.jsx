@@ -52,8 +52,6 @@ export default function ElementCard({ element, option, category, nameSymbolLearn
         }
     };
 
-
-
     return (
         <TouchableOpacity
             style={styles.container}

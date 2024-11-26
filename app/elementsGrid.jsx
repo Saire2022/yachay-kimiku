@@ -63,7 +63,7 @@ export default function ElementsGrid() {
     const nameSymbolLearnedElements = userData?.gameStats?.[groupID]?.[option]?.nameSymbol?.learnedElements || [];
     const symbolNameLearnedElements = userData?.gameStats?.[groupID]?.[option]?.symbolName?.learnedElements || [];
 
-    console.log(nameSymbolLearnedElements, symbolNameLearnedElements);
+    //console.log(nameSymbolLearnedElements, symbolNameLearnedElements);
 
     return (
         <View style={{ padding: 20 }}>

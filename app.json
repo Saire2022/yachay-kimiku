@@ -4,7 +4,6 @@
     "slug": "yachay-kimiku",
     "version": "1.0.0",
     "orientation": "portrait",
-    //"icon": "./assets/images/icon.png",
     "scheme": "myapp",
     "userInterfaceStyle": "automatic",
     "ios": {
@@ -14,7 +13,8 @@
       "adaptiveIcon": {
         "foregroundImage": "./assets/images/adaptive-icon.png",
         "backgroundColor": "#ffffff"
-      }
+      },
+      "package": "com.sairecnj.yachaykimiku"
     },
     "web": {
       "bundler": "metro",
@@ -26,6 +26,18 @@
     ],
     "experiments": {
       "typedRoutes": true
-    }
+    },
+    "extra": {
+      "router": {
+        "origin": false
+      },
+      "eas": {
+        "projectId": "63b1bff1-ce65-414f-9e3e-31c608b21ede"
+      }
+    },
+    "assetBundlePatterns": [
+      "assets/**/*",
+      "assets/fonts/*"
+    ]
   }
 }

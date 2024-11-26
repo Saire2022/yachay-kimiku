@@ -45,7 +45,7 @@ export default function Ranking() {
 
   return (
     <View style={styles.container}>
-      <Text style={styles.title}>User Ranking</Text>
+      <Text style={styles.title}>Ranking</Text>
       <FlatList
         data={users}
         keyExtractor={(item) => item.id}
@@ -53,13 +53,13 @@ export default function Ranking() {
         onRefresh={fetchUsers}
         renderItem={({ item, index }) => (
           <View style={styles.item}>
-            <Text style={styles.rank}>#{index + 1}</Text>
+            <Text style={styles.rank}>{index + 1}</Text>
             <Image
               source={require('../../assets/images/perfil.png')}
               style={styles.avatar}
             />
             <Text style={styles.username}>{item.userName}</Text>
-            <Text style={styles.learnedElements}>Learned Elements: {item.learnedElements?.length || 0}</Text>
+            <Text style={styles.learnedElements}>Elementos: {item.learnedElements?.length || 0}</Text>
           </View>
         )}
       />
@@ -73,7 +73,7 @@ const styles = StyleSheet.create({
     justifyContent: 'center',
     alignItems: 'center',
     padding: 16,
-    backgroundColor: ColorsPalet.background, // Light airy background
+    //backgroundColor: ColorsPalet.background, // Light airy background
     marginTop: 40,
   },
   title: {

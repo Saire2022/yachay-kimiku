@@ -37,16 +37,10 @@ export default function SignUp() {
         userName: username,
         gameStats: {
           G1: {
-            nameSymbol: {
-              learnedElements:[]
-            },
-            symbolName: {
-              learnedElements:[]
-            }
           }
         },
         learnedElements: [],
-        totalStars: 0,
+        totalStars: 15,
         unlockedGroups: ['G1']
       });
 
@@ -60,7 +54,7 @@ export default function SignUp() {
   };
 
   const handleSignIn = () => {
-    router.push('singIn');
+    router.push('signIn');
   };
 
   return (
